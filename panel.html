@@ -38,6 +38,7 @@
   .badge-off { color: #5B6653; background: #EDF0EA; }
   .badge-warn { color: #C24B3A; background: #FBEDEA; }
   .badge-draft { color: #8A9480; background: none; border: 1.5px dashed #C9DDBB; }
+  #demo-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1F2A1B; color: #fff; font-size: 14px; font-weight: 600; border-radius: 12px; padding: 13px 22px; box-shadow: 0 8px 24px rgba(31,42,27,0.35); z-index: 99; display: none; max-width: 90vw; text-align: center; }
 
   .btn-primary { background: #3E9420; color: #fff; border: none; border-radius: 10px; padding: 10px 18px; font-size: 14px; font-weight: 700; }
   .btn-primary:hover { background: #368218; }
@@ -106,7 +107,7 @@
         <div style="font-size: 14px; color: #8A9480; margin-top: 3px;">42 estudiantes · Cuestionario: Lectura Crítica · 4 de julio</div>
       </div>
       <div style="display: flex; gap: 10px;">
-        <button class="btn-outline">Exportar informe</button>
+        <button class="btn-outline" onclick="demoToast('El informe PDF estará disponible en la versión completa')">Exportar informe</button>
         <button class="btn-primary" onclick="show('banco')">Nuevo cuestionario</button>
       </div>
     </div>
@@ -301,7 +302,7 @@
       </div>
       <div style="display: flex; gap: 10px; align-items: center;">
         <input class="f-input" id="est-search" placeholder="Buscar por nombre o código…" style="width: 240px;" oninput="filterStudents()">
-        <button class="btn-primary">Agregar estudiante</button>
+        <button class="btn-primary" onclick="demoToast('El registro de estudiantes estará disponible en la versión completa')">Agregar estudiante</button>
       </div>
     </div>
 
@@ -335,7 +336,7 @@
         </div>
         <div id="est-rows">
           <div class="trow cols-est">
-            <div style="font-weight: 600;">María José Erazo</div><div style="color: #5B6653;">SM-2026-0076</div><div style="color: #5B6653;">Sabatino A</div><div style="font-weight: 800; color: #2E7217;">331/500</div><div style="color: #2E7217; font-weight: 700;">▲ mejorando</div><div><span class="badge badge-ok">Activo</span></div>
+            <div style="font-weight: 600;">María José Erazo</div><div style="color: #5B6653;">SM-2026-0076</div><div style="color: #5B6653;">Sabatino A</div><div style="font-weight: 800; color: #2E7217;">412/500</div><div style="color: #2E7217; font-weight: 700;">▲ mejorando</div><div><span class="badge badge-ok">Activo</span></div>
           </div>
           <div class="trow cols-est">
             <div style="font-weight: 600;">Valentina Muñoz</div><div style="color: #5B6653;">SM-2026-0187</div><div style="color: #5B6653;">Sabatino B</div><div style="font-weight: 800; color: #2E7217;">312/500</div><div style="color: #2E7217; font-weight: 700;">▲ mejorando</div><div><span class="badge badge-ok">Activo</span></div>
@@ -370,7 +371,7 @@
         <div style="font-size: 22px; font-weight: 800; color: #1F2A1B;">Simulacros</div>
         <div style="font-size: 14px; color: #8A9480; margin-top: 3px;">Exámenes completos tipo Saber 11 · Escala 0–500</div>
       </div>
-      <button class="btn-primary">Programar simulacro</button>
+      <button class="btn-primary" onclick="demoToast('La programación de simulacros estará disponible en la versión completa')">Programar simulacro</button>
     </div>
 
     <div style="background: #1F2A1B; border-radius: 16px; padding: 22px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
@@ -384,7 +385,7 @@
           <div style="font-size: 24px; font-weight: 800; color: #fff;">276<span style="font-size: 14px; color: #A9B4A0; font-weight: 600;">/300</span></div>
           <div style="font-size: 12px; color: #A9B4A0;">inscritos</div>
         </div>
-        <button class="btn-primary" style="padding: 12px 20px;">Ver inscritos</button>
+        <button class="btn-primary" style="padding: 12px 20px;" onclick="demoToast('La lista de inscritos estará disponible en la versión completa')">Ver inscritos</button>
       </div>
     </div>
 
@@ -417,16 +418,16 @@
           <div>FECHA</div><div>SIMULACRO</div><div>PRESENTARON</div><div>PROMEDIO</div><div>VS. ANTERIOR</div>
         </div>
         <div class="trow cols-sim">
-          <div style="color: #5B6653;">14 jun 2026</div><div style="font-weight: 600;">Simulacro Nacional 2</div><div>276/300</div><div style="font-weight: 800; color: #2E7217;">298/500</div><div style="color: #2E7217; font-weight: 700;">▲ +12</div>
+          <div style="color: #5B6653;">13 jun 2026</div><div style="font-weight: 600;">Simulacro Nacional 2</div><div>276/300</div><div style="font-weight: 800; color: #2E7217;">298/500</div><div style="color: #2E7217; font-weight: 700;">▲ +12</div>
         </div>
         <div class="trow cols-sim">
-          <div style="color: #5B6653;">17 may 2026</div><div style="font-weight: 600;">Simulacro Nacional 1</div><div>268/300</div><div style="font-weight: 800; color: #1F2A1B;">286/500</div><div style="color: #2E7217; font-weight: 700;">▲ +11</div>
+          <div style="color: #5B6653;">16 may 2026</div><div style="font-weight: 600;">Simulacro Nacional 1</div><div>268/300</div><div style="font-weight: 800; color: #1F2A1B;">286/500</div><div style="color: #2E7217; font-weight: 700;">▲ +11</div>
         </div>
         <div class="trow cols-sim">
-          <div style="color: #5B6653;">19 abr 2026</div><div style="font-weight: 600;">Simulacro intermedio</div><div>259/300</div><div style="font-weight: 800; color: #1F2A1B;">275/500</div><div style="color: #2E7217; font-weight: 700;">▲ +13</div>
+          <div style="color: #5B6653;">18 abr 2026</div><div style="font-weight: 600;">Simulacro intermedio</div><div>259/300</div><div style="font-weight: 800; color: #1F2A1B;">275/500</div><div style="color: #2E7217; font-weight: 700;">▲ +13</div>
         </div>
         <div class="trow cols-sim">
-          <div style="color: #5B6653;">15 mar 2026</div><div style="font-weight: 600;">Simulacro diagnóstico</div><div>283/300</div><div style="font-weight: 800; color: #1F2A1B;">262/500</div><div style="color: #8A9480; font-weight: 700;">— línea base</div>
+          <div style="color: #5B6653;">14 mar 2026</div><div style="font-weight: 600;">Simulacro diagnóstico</div><div>283/300</div><div style="font-weight: 800; color: #1F2A1B;">262/500</div><div style="color: #8A9480; font-weight: 700;">— línea base</div>
         </div>
       </div>
     </div>
@@ -457,6 +458,15 @@ function filterStudents() {
   document.querySelectorAll('#est-rows .trow').forEach(r => {
     r.style.display = r.textContent.toLowerCase().includes(q) ? 'grid' : 'none';
   });
+}
+
+let demoToastTimer;
+function demoToast(msg) {
+  const t = document.getElementById('demo-toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(demoToastTimer);
+  demoToastTimer = setTimeout(() => { t.style.display = 'none'; }, 2800);
 }
 
 function buildOpts() {
@@ -506,5 +516,6 @@ function save() {
 buildOpts();
 preview();
 </script>
+<div id="demo-toast"></div>
 </body>
 </html>

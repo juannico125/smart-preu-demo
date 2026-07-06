@@ -561,6 +561,11 @@ function teacherSave() {
   teacherRefresh();
 }
 
+// Enter en los campos del login también ingresa
+['login-code', 'login-pass'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') go('home'); });
+});
+
 buildTeacherOpts();
 teacherRefresh();
 </script>
