@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Preuniversitario · Panel del instituto</title>
+<link rel="icon" href="assets/logo-smart.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', sans-serif; background: #F7FAF4; }
+  .layout { display: flex; min-height: 100dvh; }
+  button { font-family: inherit; cursor: pointer; }
+  input, textarea, select { font-family: inherit; }
+
+  /* sidebar */
+  .sidebar { width: 232px; background: #1F2A1B; display: flex; flex-direction: column; padding: 22px 16px; gap: 4px; flex-shrink: 0; position: sticky; top: 0; height: 100dvh; }
+  .sidebar img { width: 150px; border-radius: 8px; margin: 0 4px 22px; }
+  .nav-item { border: none; text-align: left; border-radius: 10px; padding: 11px 14px; font-size: 14px; color: #A9B4A0; background: none; }
+  .nav-item.active { font-weight: 700; color: #fff; background: #3E9420; }
+  .nav-item:not(.active):hover { background: rgba(255,255,255,0.07); color: #fff; }
+
+  /* main */
+  .main { flex: 1; padding: 28px 32px; display: none; flex-direction: column; gap: 22px; min-width: 0; }
+  .main.active { display: flex; }
+  .stat { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 1px 3px rgba(31,42,27,0.06); display: flex; flex-direction: column; gap: 4px; }
+  .row { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr 1.2fr; padding: 14px 22px; font-size: 14px; color: #1F2A1B; align-items: center; border-bottom: 1px solid #EDF0EA; }
+  .row:last-child { border-bottom: none; }
+
+  .btn-primary { background: #3E9420; color: #fff; border: none; border-radius: 10px; padding: 10px 18px; font-size: 14px; font-weight: 700; }
+  .btn-primary:hover { background: #368218; }
+  .btn-outline { border: 1.5px solid #C9DDBB; background: none; color: #2E7217; border-radius: 10px; padding: 10px 18px; font-size: 14px; font-weight: 700; }
+
+  /* form */
+  .f-label { font-size: 13px; font-weight: 700; color: #3A4433; }
+  .f-label span { font-weight: 500; color: #8A9480; }
+  .f-input, .f-select, .f-textarea { background: #fff; border: 1.5px solid #D8DFD0; border-radius: 10px; padding: 11px 14px; font-size: 14px; color: #1F2A1B; outline: none; width: 100%; }
+  .f-textarea { line-height: 1.5; resize: none; }
+  .f-input:focus, .f-select:focus, .f-textarea:focus { border-color: #3E9420; }
+  .b-opt { background: #fff; border: 1.5px solid #D8DFD0; border-radius: 10px; padding: 8px 14px; font-size: 14px; color: #3A4433; display: flex; gap: 11px; align-items: center; }
+  .b-opt.correct { background: #EFF7E8; border-color: #3E9420; }
+  .b-dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #D8DFD0; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #fff; }
+  .b-opt.correct .b-dot { background: #3E9420; border-color: #3E9420; }
+  .b-dot i { width: 8px; height: 8px; border-radius: 50%; background: transparent; }
+  .b-opt.correct .b-dot i { background: #fff; }
+  .b-opt b { color: #8A9480; }
+  .b-opt.correct b { color: #2E7217; }
+  .b-opt input { flex: 1; border: none; outline: none; font-size: 14px; color: #1F2A1B; background: transparent; padding: 4px 0; min-width: 0; }
+
+  .pv-opt { border: 1.5px solid #E3E9DC; border-radius: 11px; padding: 10px 13px; font-size: 13px; color: #3A4433; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pv-opt b { color: #8A9480; }
+
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 2px; padding: 14px 16px; }
+    .sidebar img { width: 110px; margin: 0 10px 0 0; }
+    .nav-item { padding: 9px 12px; font-size: 13px; }
+    .sidebar .profile { display: none; }
+    .main { padding: 20px 16px; }
+    .stats-grid { grid-template-columns: 1fr 1fr !important; }
+    .banco-grid { flex-direction: column; }
+    .banco-grid .preview-col { width: 100% !important; }
+    .table-scroll { overflow-x: auto; }
+    .table-inner { min-width: 640px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <div class="sidebar">
+    <img src="assets/logo-smart.png" alt="Smart Preuniversitario">
+    <button class="nav-item active" id="nav-resultados" onclick="show('resultados')">Resultados</button>
+    <button class="nav-item" id="nav-banco" onclick="show('banco')">Banco de preguntas</button>
+    <button class="nav-item" onclick="show('banco')">Cuestionarios</button>
+    <button class="nav-item" onclick="show('resultados')">Estudiantes</button>
+    <button class="nav-item" onclick="show('resultados')">Simulacros</button>
+    <a href="index.html" style="margin-top: 14px; color: #A9B4A0; font-size: 13px; font-weight: 600; text-decoration: none; padding: 8px 14px;">← App del estudiante</a>
+    <div class="profile" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.12); padding: 14px 4px 0; display: flex; align-items: center; gap: 10px;">
+      <div style="width: 34px; height: 34px; border-radius: 50%; background: #4CA82B; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">JR</div>
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: #fff;">Prof. Jaime Ruiz</div>
+        <div style="font-size: 11px; color: #A9B4A0;">Coordinador</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ VISTA: RESULTADOS ══════════ -->
+  <div class="main active" id="view-resultados">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <div style="font-size: 22px; font-weight: 800; color: #1F2A1B;">Grupo Sabatino 2026-B</div>
+        <div style="font-size: 14px; color: #8A9480; margin-top: 3px;">42 estudiantes · Cuestionario: Lectura Crítica · 4 de julio</div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-outline">Exportar informe</button>
+        <button class="btn-primary" onclick="show('banco')">Nuevo cuestionario</button>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+      <div class="stat">
+        <div style="font-size: 13px; color: #8A9480;">Promedio del grupo</div>
+        <div style="font-size: 26px; font-weight: 800; color: #1F2A1B;">68%</div>
+        <div style="font-size: 12px; font-weight: 700; color: #2E7217;">▲ 6 pts vs. junio</div>
+      </div>
+      <div class="stat">
+        <div style="font-size: 13px; color: #8A9480;">Presentaron</div>
+        <div style="font-size: 26px; font-weight: 800; color: #1F2A1B;">38<span style="font-size: 15px; color: #8A9480; font-weight: 600;">/42</span></div>
+        <div style="font-size: 12px; color: #8A9480;">4 pendientes</div>
+      </div>
+      <div class="stat">
+        <div style="font-size: 13px; color: #8A9480;">Tema más débil</div>
+        <div style="font-size: 17px; font-weight: 800; color: #C24B3A; line-height: 1.3;">Reflexionar y evaluar</div>
+        <div style="font-size: 12px; color: #8A9480;">52% de aciertos</div>
+      </div>
+      <div class="stat">
+        <div style="font-size: 13px; color: #8A9480;">Pregunta más fallada</div>
+        <div style="font-size: 17px; font-weight: 800; color: #1F2A1B; line-height: 1.3;">N.º 17 · Intención del autor</div>
+        <div style="font-size: 12px; color: #8A9480;">solo 34% acertó</div>
+      </div>
+    </div>
+
+    <div class="table-scroll" style="background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(31,42,27,0.06); overflow: hidden;">
+      <div class="table-inner">
+        <div class="row" style="background: #F3F7EE; font-size: 12px; font-weight: 700; color: #5B6653; letter-spacing: 0.5px; border-bottom: none;">
+          <div>ESTUDIANTE</div><div>ACIERTOS</div><div>TIEMPO</div><div>TENDENCIA</div><div>REFUERZO SUGERIDO</div>
+        </div>
+        <div class="row">
+          <div style="font-weight: 600;">Valentina Muñoz</div><div style="font-weight: 800; color: #2E7217;">16/20</div><div>17:05</div><div style="color: #2E7217; font-weight: 700;">▲ mejorando</div><div style="color: #8A9480; font-size: 13px;">Evaluación de contenido</div>
+        </div>
+        <div class="row">
+          <div style="font-weight: 600;">Andrés Gómez</div><div style="font-weight: 800; color: #2E7217;">15/20</div><div>19:40</div><div style="color: #8A9480; font-weight: 700;">— estable</div><div style="color: #8A9480; font-size: 13px;">Estructura del texto</div>
+        </div>
+        <div class="row">
+          <div style="font-weight: 600;">Sara Imbachí</div><div style="font-weight: 800; color: #C24B3A;">9/20</div><div>24:58</div><div style="color: #C24B3A; font-weight: 700;">▼ en riesgo</div><div style="color: #8A9480; font-size: 13px;">Información literal</div>
+        </div>
+        <div class="row">
+          <div style="font-weight: 600;">Juan David Paz</div><div style="font-weight: 800; color: #2E7217;">14/20</div><div>16:12</div><div style="color: #2E7217; font-weight: 700;">▲ mejorando</div><div style="color: #8A9480; font-size: 13px;">Evaluación de contenido</div>
+        </div>
+        <div class="row">
+          <div style="font-weight: 600;">Laura Cerón</div><div style="font-weight: 800; color: #1F2A1B;">12/20</div><div>21:33</div><div style="color: #8A9480; font-weight: 700;">— estable</div><div style="color: #8A9480; font-size: 13px;">Intención del autor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ VISTA: BANCO DE PREGUNTAS ══════════ -->
+  <div class="main" id="view-banco">
+    <div class="banco-grid" style="display: flex; gap: 26px; align-items: flex-start;">
+
+      <!-- formulario -->
+      <div style="flex: 1.15; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+        <div>
+          <div style="font-size: 22px; font-weight: 800; color: #1F2A1B;">Nueva pregunta</div>
+          <div style="font-size: 14px; color: #8A9480; margin-top: 3px;">Banco de preguntas · Lectura Crítica</div>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 6px;">
+            <label class="f-label">Área</label>
+            <select class="f-select" id="b-area" onchange="preview()">
+              <option>Lectura Crítica</option>
+              <option>Matemáticas</option>
+              <option>Sociales y Ciudadanas</option>
+              <option>Ciencias Naturales</option>
+              <option>Inglés</option>
+            </select>
+          </div>
+          <div style="flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 6px;">
+            <label class="f-label">Competencia</label>
+            <select class="f-select">
+              <option>Reflexionar y evaluar</option>
+              <option>Información literal</option>
+              <option>Estructura del texto</option>
+              <option>Evaluación de contenido</option>
+            </select>
+          </div>
+          <div style="width: 130px; display: flex; flex-direction: column; gap: 6px;">
+            <label class="f-label">Dificultad</label>
+            <select class="f-select">
+              <option>Media</option>
+              <option>Baja</option>
+              <option>Alta</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label class="f-label">Enunciado</label>
+          <textarea class="f-textarea" id="b-enun" rows="2" oninput="preview()">Del planteamiento del autor puede inferirse que su intención principal es</textarea>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label class="f-label">Opciones de respuesta <span>· marca la correcta</span></label>
+          <div id="b-opts" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label class="f-label">Explicación <span>· la ve el estudiante cuando falla</span></label>
+          <textarea class="f-textarea" id="b-exp" rows="3">El autor no se limita a describir: usa expresiones valorativas como «es urgente» y cierra con un llamado directo al lector. Cuando un texto combina argumentos con apelaciones al receptor, su intención es persuadir.</textarea>
+        </div>
+      </div>
+
+      <!-- vista previa -->
+      <div class="preview-col" style="width: 400px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 13px; font-weight: 700; color: #5B6653; letter-spacing: 0.5px;">ASÍ LA VERÁ EL ESTUDIANTE</div>
+        <div style="background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(31,42,27,0.06); display: flex; flex-direction: column; gap: 12px;">
+          <div style="font-size: 12px; font-weight: 700; color: #2E7217; background: #E8F3DF; border-radius: 999px; padding: 5px 11px; align-self: flex-start;" id="pv-area">Lectura Crítica</div>
+          <div style="font-size: 15px; font-weight: 700; color: #1F2A1B; line-height: 1.45;" id="pv-enun"></div>
+          <div style="display: flex; flex-direction: column; gap: 8px;" id="pv-opts"></div>
+        </div>
+        <div id="b-toast" style="display: none; background: #EFF7E8; border: 1.5px solid #9DC985; border-radius: 12px; padding: 13px 16px; font-size: 14px; font-weight: 700; color: #2E7217; text-align: center;"></div>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+          <button class="btn-primary" style="padding: 13px;" onclick="save()">Guardar y agregar otra</button>
+          <button class="btn-outline" style="padding: 12px;" onclick="show('resultados')">Guardar y volver al panel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const LETTERS = 'ABCD';
+const DEFAULT_OPTS = [
+  'persuadir al lector de cambiar sus hábitos de consumo.',
+  'informar sobre estadísticas de reciclaje en Colombia.',
+  'describir un proceso industrial de forma neutral.',
+  'narrar la historia del movimiento ambientalista.',
+];
+let correct = 0;
+let saved = 0;
+
+function show(view) {
+  document.querySelectorAll('.main').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.getElementById('nav-resultados').classList.toggle('active', view === 'resultados');
+  document.getElementById('nav-banco').classList.toggle('active', view === 'banco');
+  window.scrollTo(0, 0);
+}
+
+function buildOpts() {
+  const box = document.getElementById('b-opts');
+  box.innerHTML = '';
+  DEFAULT_OPTS.forEach((txt, i) => {
+    const div = document.createElement('div');
+    div.className = 'b-opt' + (correct === i ? ' correct' : '');
+    div.innerHTML = '<div class="b-dot"><i></i></div><b>' + LETTERS[i] + '</b><input>';
+    div.querySelector('input').value = txt;
+    div.querySelector('input').oninput = preview;
+    div.querySelector('.b-dot').onclick = () => {
+      correct = i;
+      document.querySelectorAll('.b-opt').forEach((r, j) => r.classList.toggle('correct', j === i));
+      preview();
+    };
+    box.appendChild(div);
+  });
+}
+
+function preview() {
+  document.getElementById('pv-area').textContent = document.getElementById('b-area').value;
+  document.getElementById('pv-enun').textContent = document.getElementById('b-enun').value || '…';
+  const box = document.getElementById('pv-opts');
+  box.innerHTML = '';
+  [...document.querySelectorAll('.b-opt input')].forEach((inp, i) => {
+    const div = document.createElement('div');
+    div.className = 'pv-opt';
+    const b = document.createElement('b');
+    b.textContent = LETTERS[i] + ' ';
+    div.appendChild(b);
+    div.appendChild(document.createTextNode(inp.value || '…'));
+    box.appendChild(div);
+  });
+}
+
+let toastTimer;
+function save() {
+  saved++;
+  const toast = document.getElementById('b-toast');
+  toast.textContent = 'Pregunta guardada en el banco · ' + (saved === 1 ? '1 pregunta nueva' : saved + ' preguntas nuevas');
+  toast.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 3500);
+}
+
+buildOpts();
+preview();
+</script>
+</body>
+</html>
