@@ -19,6 +19,9 @@
 
   /* generic bits */
   .chip { font-size: 13px; font-weight: 700; color: #2E7217; background: #E8F3DF; border-radius: 999px; padding: 6px 13px; }
+  .chip-fase { font-size: 13px; font-weight: 700; color: #fff; border-radius: 999px; padding: 6px 13px; white-space: nowrap; }
+  .chip-fase.concepto { background: #1F2A1B; }
+  .chip-fase.icfes { background: #3E9420; }
   .card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(31,42,27,0.06); }
   .btn-primary { background: #3E9420; color: #fff; border: none; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 700; box-shadow: 0 6px 16px rgba(62,148,32,0.3); transition: background 0.15s; }
   .btn-primary:hover { background: #368218; }
@@ -116,7 +119,7 @@
           <div class="area-badge" style="font-size: 14px; width: 44px; height: 44px;">LC+MT</div>
           <div style="flex: 1;">
             <div style="font-size: 16px; font-weight: 700; color: #1F2A1B;">Simulacro corto</div>
-            <div style="font-size: 13px; color: #8A9480;">6 preguntas · Lectura Crítica y Matemáticas</div>
+            <div style="font-size: 13px; color: #8A9480;">6 preguntas · 3 de concepto + 3 tipo ICFES</div>
           </div>
         </div>
         <button class="btn-primary" style="padding: 15px;" onclick="startQuiz()">Empezar ahora</button>
@@ -142,9 +145,12 @@
 
   <!-- ══════════ QUIZ ══════════ -->
   <section id="screen-quiz" style="padding: 52px 24px 30px;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div class="chip" id="q-area">Lectura Crítica</div>
-      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #3A4433; background: #fff; border: 1px solid #E3E9DC; border-radius: 999px; padding: 6px 13px;" id="q-clock">12:00</div>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+        <div class="chip" id="q-area">Lectura Crítica</div>
+        <div class="chip-fase concepto" id="q-tipo">Conceptual</div>
+      </div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #3A4433; background: #fff; border: 1px solid #E3E9DC; border-radius: 999px; padding: 6px 13px; flex-shrink: 0;" id="q-clock">12:00</div>
     </div>
     <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 16px;">
       <div style="display: flex; justify-content: space-between; font-size: 13px; color: #8A9480;">
@@ -278,8 +284,41 @@
 <script>
 // ─── Banco de preguntas de la demo ───
 const BANK = [
+  // ─── Fase 1 · 3 preguntas conceptuales ───
+  {
+    area: 'Matemáticas',
+    tipo: 'Conceptual',
+    context: null,
+    text: 'Si 3x − 5 = 16, el valor de x² es',
+    opts: ['49', '36', '121', '64'],
+    correct: 0,
+    exp: 'Primero despeja x: 3x = 16 + 5 = 21, entonces x = 7. Luego eleva al cuadrado: x² = 7 × 7 = 49. El error común es elevar 21 o 6 al cuadrado por despejar mal.',
+    tip: 'Resuelve la ecuación por pasos y verifica reemplazando: 3(7) − 5 = 21 − 5 = 16 ✓',
+  },
+  {
+    area: 'Matemáticas',
+    tipo: 'Conceptual',
+    context: null,
+    text: 'Una chaqueta cuesta $150.000 y tiene un descuento del 30%. ¿Cuánto se paga por ella?',
+    opts: ['$105.000', '$120.000', '$45.000', '$110.000'],
+    correct: 0,
+    exp: 'El 30% de $150.000 es 0,30 × 150.000 = $45.000. Ese es el descuento, no el precio final. Lo que se paga es 150.000 − 45.000 = $105.000. La trampa clásica es marcar $45.000.',
+    tip: 'Atajo: pagar con 30% de descuento es pagar el 70%. 0,70 × 150.000 = 105.000.',
+  },
+  {
+    area: 'Matemáticas',
+    tipo: 'Conceptual',
+    context: null,
+    text: 'Se lanza un dado normal de seis caras. ¿Cuál es la probabilidad de obtener un número mayor que 4?',
+    opts: ['1/3', '1/2', '1/6', '2/3'],
+    correct: 0,
+    exp: 'Los números mayores que 4 son el 5 y el 6: dos casos favorables de seis posibles. La probabilidad es 2/6, que simplificada es 1/3. Ojo: «mayor que 4» no incluye el 4.',
+    tip: 'Probabilidad = casos favorables ÷ casos posibles. Enumera los casos antes de calcular.',
+  },
+  // ─── Fase 2 · preguntas tipo ICFES ───
   {
     area: 'Lectura Crítica',
+    tipo: 'Tipo ICFES',
     context: '«La economía circular propone que los materiales no se desechen, sino que vuelvan al ciclo productivo una y otra vez, imitando los ciclos de la naturaleza, donde nada se pierde.»',
     text: 'Según el texto, el propósito principal de la economía circular es',
     opts: [
@@ -294,6 +333,7 @@ const BANK = [
   },
   {
     area: 'Lectura Crítica',
+    tipo: 'Tipo ICFES',
     context: '«El plástico, ese huésped incómodo de los océanos, tarda siglos en degradarse.»',
     text: 'En el fragmento, la expresión «huésped incómodo» cumple la función de',
     opts: [
@@ -308,6 +348,7 @@ const BANK = [
   },
   {
     area: 'Lectura Crítica',
+    tipo: 'Tipo ICFES',
     context: '«Es urgente cambiar nuestros hábitos: no podemos seguir tratando el planeta como un basurero infinito. La decisión está en tus manos.»',
     text: 'Del fragmento puede inferirse que la intención principal del autor es',
     opts: [
@@ -319,33 +360,6 @@ const BANK = [
     correct: 0,
     exp: 'El autor usa expresiones valorativas («es urgente», «no podemos seguir así») y cierra con un llamado directo al lector. Cuando un texto combina argumentos con apelaciones al receptor, su intención es persuadir, no solo informar.',
     tip: 'Subraya los verbos en primera persona plural y los adjetivos de juicio; delatan la postura del autor.',
-  },
-  {
-    area: 'Matemáticas',
-    context: null,
-    text: 'Si 3x − 5 = 16, el valor de x² es',
-    opts: ['49', '36', '121', '64'],
-    correct: 0,
-    exp: 'Primero despeja x: 3x = 16 + 5 = 21, entonces x = 7. Luego eleva al cuadrado: x² = 7 × 7 = 49. El error común es elevar 21 o 6 al cuadrado por despejar mal.',
-    tip: 'Resuelve la ecuación por pasos y verifica reemplazando: 3(7) − 5 = 21 − 5 = 16 ✓',
-  },
-  {
-    area: 'Matemáticas',
-    context: null,
-    text: 'Una chaqueta cuesta $150.000 y tiene un descuento del 30%. ¿Cuánto se paga por ella?',
-    opts: ['$105.000', '$120.000', '$45.000', '$110.000'],
-    correct: 0,
-    exp: 'El 30% de $150.000 es 0,30 × 150.000 = $45.000. Ese es el descuento, no el precio final. Lo que se paga es 150.000 − 45.000 = $105.000. La trampa clásica es marcar $45.000.',
-    tip: 'Atajo: pagar con 30% de descuento es pagar el 70%. 0,70 × 150.000 = 105.000.',
-  },
-  {
-    area: 'Matemáticas',
-    context: null,
-    text: 'Se lanza un dado normal de seis caras. ¿Cuál es la probabilidad de obtener un número mayor que 4?',
-    opts: ['1/3', '1/2', '1/6', '2/3'],
-    correct: 0,
-    exp: 'Los números mayores que 4 son el 5 y el 6: dos casos favorables de seis posibles. La probabilidad es 2/6, que simplificada es 1/3. Ojo: «mayor que 4» no incluye el 4.',
-    tip: 'Probabilidad = casos favorables ÷ casos posibles. Enumera los casos antes de calcular.',
   },
 ];
 
@@ -396,6 +410,9 @@ function renderQuiz() {
   const isLast = state.qIndex === BANK.length - 1;
 
   document.getElementById('q-area').textContent = q.area;
+  const tipoEl = document.getElementById('q-tipo');
+  tipoEl.textContent = q.tipo;
+  tipoEl.className = 'chip-fase ' + (q.tipo === 'Conceptual' ? 'concepto' : 'icfes');
   document.getElementById('q-num').textContent = 'Pregunta ' + (state.qIndex + 1) + ' de ' + BANK.length;
   document.getElementById('q-answered').textContent = answered + ' respondidas';
   document.getElementById('q-progress').style.width = Math.round(answered / BANK.length * 100) + '%';
@@ -457,7 +474,7 @@ function showResults() {
 
   const areas = document.getElementById('r-areas');
   areas.innerHTML = '';
-  ['Lectura Crítica', 'Matemáticas'].forEach(name => {
+  ['Matemáticas', 'Lectura Crítica'].forEach(name => {
     const items = graded.filter(x => x.q.area === name);
     const ok = items.filter(x => x.a === x.q.correct).length;
     const p = items.length ? ok / items.length : 0;
